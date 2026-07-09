@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAKboard Custom Wide Chore Chart</title>
+    <title>DAKboard Responsive Wide Chore Chart</title>
     <style>
         :root {
             --card-bg: rgba(30, 30, 30, 0.75); /* Semi-transparent to blend with wallpaper */
             --card-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff;
             --text-muted: #b0b0b0;
-            --accent-color: #00ffcc; /* Vivid neon cyan match */
+            --accent-color: #00ffcc; /* Vivid neon cyan */
         }
 
         * {
@@ -24,11 +24,12 @@
             /* 1. Transparent Background */
             background-color: transparent !important;
             color: var(--text-main);
-            padding: 20px 30px;
+            padding: 2vh 2vw;
             overflow: hidden;
-            /* 2. Scaled to match 23" x 8" dimensions */
-            width: 2208px;
-            height: 768px;
+            
+            /* 2. Fluidly takes up 100% of whatever container size DAKboard dictates */
+            width: 100vw;
+            height: 100vh;
         }
 
         /* Header Layout Styling */
@@ -36,44 +37,44 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 2vh;
             border-bottom: 2px solid var(--card-border);
-            padding-bottom: 10px;
+            padding-bottom: 1vh;
         }
 
         /* 3. Eye-Catching Neon Header Color & Font */
         .header h1 {
-            font-size: 38px;
+            font-size: 3.5vh; /* Scales beautifully based on block height */
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #00ffcc; /* Neon Cyan */
+            letter-spacing: 0.3vw;
+            color: #00ffcc; 
             text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
         }
 
         .header .day-display {
-            font-size: 28px;
+            font-size: 2.8vh;
             color: #ff007f; /* Vibrant Neon Pink */
             text-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
             font-weight: 700;
             text-transform: uppercase;
         }
 
-        /* 6-Column Sibling Row (Optimized for ultra-wide display) */
+        /* 6-Column Sibling Row (Scales fluidly to container width) */
         .chore-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            grid-gap: 20px;
-            height: calc(100% - 90px);
+            grid-gap: 1.5vw;
+            height: calc(100% - 8vh);
         }
 
         /* Child Entry Cards */
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
-            backdrop-filter: blur(5px); /* Smoothly blurs whatever is behind the card */
-            border-radius: 14px;
-            padding: 20px 15px;
+            backdrop-filter: blur(5px); /* Smoothly blurs behind the card */
+            border-radius: 1vw;
+            padding: 2.5vh 1vw;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -84,25 +85,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 2vh;
             text-align: center;
+            width: 100%;
         }
 
         /* Circular Photos */
         .avatar {
-            width: 90px;
-            height: 90px;
+            width: 9.5vh; /* Proportional to vertical height */
+            height: 9.5vh;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--card-border);
             background-color: rgba(255,255,255,0.05);
-            margin-bottom: 10px;
+            margin-bottom: 1vh;
         }
 
         .card h2 {
-            font-size: 24px;
+            font-size: 2.4vh;
             font-weight: 700;
             letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
 
         /* Touch-Friendly Tasks */
@@ -110,22 +116,32 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 1.5vh;
+            overflow-y: auto; /* Fallback if text is too long for a tiny screen */
+        }
+
+        /* Custom Scrollbar for extreme sizing edge cases */
+        .task-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .task-list::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
         }
 
         .task-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            gap: 0.8vw;
             cursor: pointer;
-            padding: 4px;
+            padding: 0.5vh 0.2vw;
         }
 
         .task-item input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
-            width: 26px;
-            height: 26px;
+            width: 2.6vh;
+            height: 2.6vh;
             border: 2px solid var(--text-muted);
             border-radius: 6px;
             outline: none;
@@ -133,7 +149,7 @@
             cursor: pointer;
             display: grid;
             place-content: center;
-            margin-top: 2px;
+            margin-top: 0.2vh;
             flex-shrink: 0;
             transition: all 0.2s ease;
         }
@@ -146,12 +162,12 @@
         .task-item input[type="checkbox"]:checked::before {
             content: "✓";
             color: #121212;
-            font-size: 18px;
+            font-size: 1.8vh;
             font-weight: bold;
         }
 
         .task-item label {
-            font-size: 16px;
+            font-size: 1.7vh;
             line-height: 1.3;
             color: var(--text-main);
             cursor: pointer;
@@ -172,18 +188,18 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            height: 400px;
+            height: 100%;
         }
 
         .rest-day h2 {
-            font-size: 56px;
+            font-size: 6vh;
             color: #00ffcc;
-            margin-bottom: 15px;
+            margin-bottom: 2vh;
             text-transform: uppercase;
         }
 
         .rest-day p {
-            font-size: 26px;
+            font-size: 3vh;
             color: var(--text-muted);
         }
     </style>
