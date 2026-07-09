@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAKboard Compact Fluid Chore Chart</title>
+    <title>DAKboard Wide Large-Font Chore Chart</title>
     <style>
         :root {
-            --card-bg: rgba(22, 22, 22, 0.8); /* Darker transparent blend for sharp text contrast */
-            --card-border: rgba(255, 255, 255, 0.12);
+            --card-bg: rgba(30, 30, 30, 0.75); /* Semi-transparent to blend with wallpaper */
+            --card-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff;
-            --text-muted: #b8b8b8;
+            --text-muted: #b0b0b0;
             --accent-color: #00ffcc; /* Vivid neon cyan */
         }
 
@@ -23,24 +23,27 @@
             font-family: "Montserrat", "Segoe UI", Roboto, sans-serif;
             background-color: transparent !important;
             color: var(--text-main);
-            padding: 1.5vh 1.5vw;
+            padding: 2vh 2vw;
             overflow: hidden;
+            
+            /* Fluidly fills out the container (designed for 100% width, 40% height) */
             width: 100vw;
             height: 100vh;
         }
 
-        /* Top Bar Header Layout */
+        /* Header Layout Styling */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5vh;
+            margin-bottom: 2vh;
             border-bottom: 2px solid var(--card-border);
-            padding-bottom: 0.8vh;
+            padding-bottom: 1vh;
         }
 
+        /* Eye-Catching Neon Header Color & Font */
         .header h1 {
-            font-size: 3.5vh;
+            font-size: 3.5vh; 
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.3vw;
@@ -56,85 +59,93 @@
             text-transform: uppercase;
         }
 
-        /* Responsive 6-Column Matrix Grid */
+        /* 6-Column Matrix (Reverted back to full spacious width separation) */
         .chore-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            grid-gap: 1.2vw;
-            height: calc(100% - 7.5vh);
+            grid-gap: 1.5vw;
+            height: calc(100% - 8vh);
         }
 
-        /* Individual Child Cards - Shrunken Height Footprint */
+        /* Child Entry Cards - Original uncompressed layout */
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
-            backdrop-filter: blur(8px);
-            border-radius: 0.8vw;
-            padding: 1.2vh 0.8vw; /* Reduced vertical interior space */
+            backdrop-filter: blur(5px);
+            border-radius: 1vw;
+            padding: 2.5vh 1vw;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            height: 100%; /* Spans full cell height constraint */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            height: 100%;
+            overflow: hidden;
         }
 
-        /* Ultra-Tight Dynamic Header */
+        /* Stacked Header Layout (Avatar on top of Name) */
         .card-header {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 0.6vw;
-            margin-bottom: 1.2vh;
+            margin-bottom: 2vh;
             text-align: center;
             width: 100%;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 0.6vh;
         }
 
-        /* Mini-Avatars to make room for text */
+        /* Original Spacious Avatar Sizes */
         .avatar {
-            width: 4.5vh; 
-            height: 4.5vh;
+            width: 9.5vh; 
+            height: 9.5vh;
             border-radius: 50%;
             object-fit: cover;
-            border: 1.5px solid var(--card-border);
+            border: 2px solid var(--card-border);
             background-color: rgba(255,255,255,0.05);
+            margin-bottom: 1vh;
         }
 
         .card h2 {
-            font-size: 2.5vh;
-            font-weight: 800;
-            letter-spacing: 0.3px;
+            font-size: 2.4vh;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
 
-        /* Maximized Text List Box */
+        /* High-Text Flow Layout Window */
         .task-list {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 1vh;
-            justify-content: center;
-            flex-grow: 1; /* Maximizes block balance layout */
+            gap: 1.5vh;
+            overflow-y: auto; /* Gracefully scroll internally if 40% box squishes layout */
         }
 
-        /* Max Font Touch Target Row */
+        /* Custom Scrollbar to avoid clunky default grey tracks */
+        .task-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .task-list::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+        }
+
         .task-item {
             display: flex;
             align-items: flex-start;
-            gap: 0.6vw;
+            gap: 0.8vw;
             cursor: pointer;
-            padding: 0.4vh 0;
+            padding: 0.5vh 0.2vw;
         }
 
-        /* Oversized Checkbox Targets */
         .task-item input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
-            width: 3vh;
-            height: 3vh;
+            width: 2.8vh;
+            height: 2.8vh;
             border: 2px solid var(--text-muted);
-            border-radius: 5px;
+            border-radius: 6px;
             outline: none;
             background-color: transparent;
             cursor: pointer;
@@ -153,29 +164,29 @@
         .task-item input[type="checkbox"]:checked::before {
             content: "✓";
             color: #121212;
-            font-size: 2vh;
+            font-size: 1.8vh;
             font-weight: bold;
         }
 
-        /* Maximized & Wrapped Text Content */
+        /* Text scaled up to requested 2.2vh with absolute wrapping */
         .task-item label {
-            font-size: 2.2vh; /* Expanded font allocation size */
+            font-size: 2.2vh; 
             font-weight: 600;
-            line-height: 1.25;
+            line-height: 1.3;
             color: var(--text-main);
             cursor: pointer;
             user-select: none;
-            word-break: break-word; /* Safe wrapping rule execution */
+            word-break: break-word;
             display: inline-block;
         }
 
         .task-item input[type="checkbox"]:checked + label {
             color: var(--text-muted);
             text-decoration: line-through;
-            opacity: 0.5;
+            opacity: 0.6;
         }
 
-        /* Sabbath Layout View */
+        /* Sabbath Layout */
         .rest-day {
             grid-column: span 6;
             display: flex;
@@ -207,7 +218,7 @@
     </div>
 
     <div class="chore-grid" id="chore-grid">
-        <!-- Rendered dynamically by script template engines -->
+        <!-- Rendered dynamically by script -->
     </div>
 
     <script>
@@ -280,11 +291,11 @@
             }
         };
 
-        // State Machine Management Logic
+        // Automagic Midnight Wipe & State Retention Configuration 
         function manageStorageState(currentDay) {
             const storedDay = localStorage.getItem('activeChoreDay');
             
-            // If the day changed, wipe out old completion states
+            // Wipe checked status keys from cache if day doesn't match current machine state
             if (storedDay !== String(currentDay)) {
                 for (let key in localStorage) {
                     if (key.startsWith('chk-')) {
@@ -298,12 +309,10 @@
         function bindCheckboxListeners() {
             const checkboxes = document.querySelectorAll('.task-item input[type="checkbox"]');
             checkboxes.forEach(box => {
-                // Restore checkbox status from memory cache
                 if (localStorage.getItem(box.id) === 'checked') {
                     box.checked = true;
                 }
 
-                // Listen for physical interaction updates
                 box.addEventListener('change', () => {
                     if (box.checked) {
                         localStorage.setItem(box.id, 'checked');
@@ -321,7 +330,6 @@
             const gridContainer = document.getElementById('chore-grid');
             const dateDisplay = document.getElementById('date-display');
 
-            // Trigger storage cleanup engine check
             manageStorageState(dayOfWeek);
 
             if (dayOfWeek === 0) {
@@ -365,8 +373,6 @@
             });
 
             gridContainer.innerHTML = gridHTML;
-            
-            // Re-bind storage engines to nodes
             bindCheckboxListeners();
         }
 
