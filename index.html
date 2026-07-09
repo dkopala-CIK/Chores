@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chore Widget</title>
+    <title>DAKboard Custom Wide Chore Chart</title>
     <style>
+        :root {
+            --card-bg: rgba(30, 30, 30, 0.75); /* Semi-transparent to blend with wallpaper */
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #b0b0b0;
+            --accent-color: #00ffcc; /* Vivid neon cyan match */
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -12,174 +20,306 @@
         }
 
         body {
+            font-family: "Montserrat", "Segoe UI", Roboto, sans-serif;
             /* 1. Transparent Background */
             background-color: transparent !important;
-            color: #ffffff;
-            font-family: "Montserrat", "Arial Black", -apple-system, sans-serif;
-            
-            /* 2. Strict Frame Bounds */
-            width: 100px;
-            height: 59px;
+            color: var(--text-main);
+            padding: 20px 30px;
             overflow: hidden;
-            padding: 2px;
+            /* 2. Scaled to match 23" x 8" dimensions */
+            width: 2208px;
+            height: 768px;
         }
 
-        /* 3. Eye-Catching Header Style */
+        /* Header Layout Styling */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 10px;
+        }
+
+        /* 3. Eye-Catching Neon Header Color & Font */
         .header h1 {
-            font-size: 9px;
+            font-size: 38px;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #00ffcc; /* Vibrant Neon Cyan */
-            text-shadow: 0 0 4px rgba(0, 255, 204, 0.6);
-            text-align: center;
-            margin-bottom: 2px;
-            line-height: 1;
+            letter-spacing: 3px;
+            color: #00ffcc; /* Neon Cyan */
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
         }
 
-        /* Auto-Scrolling Container */
-        .ticker-window {
-            width: 100%;
-            height: 44px;
-            overflow: hidden;
-            position: relative;
+        .header .day-display {
+            font-size: 28px;
+            color: #ff007f; /* Vibrant Neon Pink */
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
-        .ticker-content {
+        /* 6-Column Sibling Row (Optimized for ultra-wide display) */
+        .chore-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-gap: 20px;
+            height: calc(100% - 90px);
+        }
+
+        /* Child Entry Cards */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(5px); /* Smoothly blurs whatever is behind the card */
+            border-radius: 14px;
+            padding: 20px 15px;
             display: flex;
             flex-direction: column;
-            position: relative;
-            animation: scrollChores 24s infinite linear;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        /* Child Entry Layout */
-        .child-row {
-            width: 100%;
-            padding: 2px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
-        }
-
-        .child-name {
-            font-size: 8px;
-            font-weight: 700;
-            color: #ff007f; /* Neon Pink to contrast the header */
-            text-transform: uppercase;
-            margin-bottom: 1px;
-        }
-
-        .chore-text {
-            font-size: 7px;
-            line-height: 1.2;
-            color: #e0e0e0;
-            white-space: pre-line;
-        }
-
-        .rest-text {
-            font-size: 8px;
+        .card-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
             text-align: center;
-            color: #ffcc00;
-            margin-top: 10px;
+        }
+
+        /* Circular Photos */
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--card-border);
+            background-color: rgba(255,255,255,0.05);
+            margin-bottom: 10px;
+        }
+
+        .card h2 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Touch-Friendly Tasks */
+        .task-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .task-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 26px;
+            height: 26px;
+            border: 2px solid var(--text-muted);
+            border-radius: 6px;
+            outline: none;
+            background-color: transparent;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .task-item input[type="checkbox"]:checked {
+            background-color: #00ffcc;
+            border-color: #00ffcc;
+        }
+
+        .task-item input[type="checkbox"]:checked::before {
+            content: "✓";
+            color: #121212;
+            font-size: 18px;
             font-weight: bold;
         }
 
-        /* Continuous Scroll Animation loop */
-        @keyframes scrollChores {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-50%); }
+        .task-item label {
+            font-size: 16px;
+            line-height: 1.3;
+            color: var(--text-main);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .task-item input[type="checkbox"]:checked + label {
+            color: var(--text-muted);
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        /* Sabbath Layout */
+        .rest-day {
+            grid-column: span 6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 400px;
+        }
+
+        .rest-day h2 {
+            font-size: 56px;
+            color: #00ffcc;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .rest-day p {
+            font-size: 26px;
+            color: var(--text-muted);
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Chores</h1>
+        <h1>Chore Chart</h1>
+        <div class="day-display" id="date-display">Loading...</div>
     </div>
 
-    <div class="ticker-window">
-        <div class="ticker-content" id="ticker-box">
-            <!-- Populated dynamically via JS -->
-        </div>
+    <div class="chore-grid" id="chore-grid">
+        <!-- Rendered dynamically by script -->
     </div>
 
     <script>
         const choreDatabase = {
-            1: [ // Monday
-                { name: "Jay", tasks: "• Zone A Vac\n• Dinner Wipe" },
-                { name: "Jake", tasks: "• Baci Walk\n• Recycling" },
-                { name: "Nate", tasks: "• Trash/Rec\n• Zone B Vac" },
-                { name: "Ellie", tasks: "• Dishwasher\n• Pool Towels" },
-                { name: "Gabe", tasks: "• Foyer Pick" },
-                { name: "V&B", tasks: "• Bookshelves" }
-            ],
-            2: [ // Tuesday
-                { name: "Jay", tasks: "• Baci Feed\n• Up Bath Light" },
-                { name: "Jake", tasks: "• Dinner Wipe\n• Cans Back" },
-                { name: "Nate", tasks: "• LAUNDRY\n• Dishwasher" },
-                { name: "Ellie", tasks: "• Zone A Vac\n• Pool Skim" },
-                { name: "Gabe", tasks: "• Basement" },
-                { name: "V&B", tasks: "• Shoe Match" }
-            ],
-            3: [ // Wednesday
-                { name: "Jay", tasks: "• Zone B Vac\n• Dishwasher" },
-                { name: "Jake", tasks: "• LAUNDRY\n• Trash Curb" },
-                { name: "Nate", tasks: "• Trash/Rec\n• Poop Scoop" },
-                { name: "Ellie", tasks: "• Dinner Wipe\n• Pool Towels" },
-                { name: "Gabe", tasks: "• Foyer Pick" },
-                { name: "V&B", tasks: "• Toy Helper" }
-            ],
-            4: [ // Thursday
-                { name: "Jay", tasks: "• LAUNDRY\n• Baci Walk" },
-                { name: "Jake", tasks: "• Zone A Vac\n• Cans Back" },
-                { name: "Nate", tasks: "• Dinner Wipe\n• Pool Vac" },
-                { name: "Ellie", tasks: "• Up Bath Light\n• Dishwasher" },
-                { name: "Gabe", tasks: "• Basement" },
-                { name: "V&B", tasks: "• Bookshelves" }
-            ],
-            5: [ // Friday
-                { name: "Jay", tasks: "• Dishwasher\n• Pool Towels" },
-                { name: "Jake", tasks: "• Zone B Vac\n• Poop Scoop" },
-                { name: "Nate", tasks: "• Baci Feed\n• Basement Vac" },
-                { name: "Ellie", tasks: "• LAUNDRY\n• Dinner Wipe" },
-                { name: "Gabe", tasks: "• Foyer Pick" },
-                { name: "V&B", tasks: "• Shoe Match" }
-            ],
-            6: [ // Saturday
-                { name: "Jay", tasks: "• Up Bath Deep\n• Fold Towels" },
-                { name: "Jake", tasks: "• 1/2 Bath Clean\n• Kitchen Mop" },
-                { name: "Nate", tasks: "• Pool Vac\n• Pool Skim" },
-                { name: "Ellie", tasks: "• Dishwasher\n• Basement" },
-                { name: "Team", tasks: "• Toy Roundup\n• Shoe Match" }
-            ]
+            1: { // Monday
+                name: "Monday",
+                tasks: [
+                    { child: "Jay", img: "jay.jpg", chores: ["Zone A Vac (FR/Foyer/Steps)", "Post-Dinner Wipe"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Baci Walk", "Recycling Cans to Curb"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Zone B Vac (LR/DR/Kit)"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Dishwasher Unload (AM)", "Pool Towel Roundup"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Family Room & Foyer Pick"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Jay)"] }
+                ]
+            },
+            2: { // Tuesday
+                name: "Tuesday",
+                tasks: [
+                    { child: "Jay", img: "jay.jpg", chores: ["Baci Feed & Water (AM)", "Up Bathroom (Light Clean)"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Post-Dinner Wipe", "Bring Recycling Cans Back"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["LAUNDRY DAY", "Dishwasher Loader (PM)"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Zone A Vac (FR/Foyer/Steps)", "Daily Pool Skimmer"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Basement Toy Reset"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Ellie)"] }
+                ]
+            },
+            3: { // Wednesday
+                name: "Wednesday",
+                tasks: [
+                    { child: "Jay", img: "jay.jpg", chores: ["Zone B Vac (LR/DR/Kit)", "Dishwasher Unload (AM)"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["LAUNDRY DAY", "Trash Cans to Curb (with Dad)"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Backyard Poop Scoop"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Post-Dinner Wipe", "Pool Towel Roundup"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Family Room & Foyer Pick"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Toy Reset Helper (with Gabe)"] }
+                ]
+            },
+            4: { // Thursday
+                name: "Thursday",
+                tasks: [
+                    { child: "Jay", img: "jay.jpg", chores: ["LAUNDRY DAY", "Baci Walk"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Zone A Vac (FR/Foyer/Steps)", "Bring Trash Cans Back"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Post-Dinner Wipe", "Clean Pool Vac Filters"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Up Bathroom (Light Clean)", "Dishwasher Loader"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Basement Toy Reset"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Ellie)"] }
+                ]
+            },
+            5: { // Friday
+                name: "Friday",
+                tasks: [
+                    { child: "Jay", img: "jay.jpg", chores: ["Dishwasher Loader", "Pool Towel Roundup"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Zone B Vac (LR/DR/Kit)", "Backyard Poop Scoop"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Baci Feed & Water", "Zone C Vac (Entire Basement)"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["LAUNDRY DAY", "Post-Dinner Wipe"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Family Room & Foyer Pick"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Jake)"] }
+                ]
+            },
+            6: { // Saturday
+                name: "Saturday",
+                tasks: [
+                    { child: "Jay", img: "jay.jpg", chores: ["Up Bathroom (Deep Clean)", "Towel Folder (Fold & Away)"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["1/2 Bath (Full Clean)", "Kitchen Mop & Floor Scrub"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Clean Pool Vac Filters", "Daily Pool Skimmer"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Dishwasher Unload (AM)", "Basement Toy Reset"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Total House Toy Roundup"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Consolidation Bin"] }
+                ]
+            }
         };
 
-        function initWidget() {
-            const dayOfWeek = new Date().getDay();
-            const container = document.getElementById('ticker-box');
+        function buildChoreChart() {
+            const today = new Date();
+            const dayOfWeek = today.getDay(); 
             
+            const gridContainer = document.getElementById('chore-grid');
+            const dateDisplay = document.getElementById('date-display');
+
             if (dayOfWeek === 0) {
-                container.innerHTML = '<div class="rest-text">Sabbath Rest</div>';
-                container.style.animation = 'none';
+                dateDisplay.innerText = "Sunday";
+                gridContainer.innerHTML = `
+                    <div class="rest-day">
+                        <h2>Sabbath Day of Rest</h2>
+                        <p>No scheduled tasks. Enjoy your day off together!</p>
+                    </div>
+                `;
                 return;
             }
 
-            const todayChores = choreDatabase[dayOfWeek];
-            let htmlPayload = '';
+            const currentDayData = choreDatabase[dayOfWeek];
+            dateDisplay.innerText = `${currentDayData.name} Rotation`;
 
-            // Generate content tags
-            todayChores.forEach(item => {
-                htmlPayload += `
-                    <div class="child-row">
-                        <div class="child-name">${item.name}</div>
-                        <div class="chore-text">${item.tasks}</div>
+            let gridHTML = '';
+            currentDayData.tasks.forEach((group, groupIdx) => {
+                let checklistHTML = '';
+                group.chores.forEach((chore, choreIdx) => {
+                    const uniqueID = `chk-${groupIdx}-${choreIdx}`;
+                    checklistHTML += `
+                        <div class="task-item" onclick="document.getElementById('${uniqueID}').click(); event.stopPropagation();">
+                            <input type="checkbox" id="${uniqueID}" onclick="event.stopPropagation();">
+                            <label for="${uniqueID}">${chore}</label>
+                        </div>
+                    `;
+                });
+
+                gridHTML += `
+                    <div class="card">
+                        <div class="card-header">
+                            <img class="avatar" src="${group.img}" alt="${group.child}" onerror="this.style.backgroundColor='rgba(255,255,255,0.1)';">
+                            <h2>${group.child}</h2>
+                        </div>
+                        <div class="task-list">
+                            ${checklistHTML}
+                        </div>
                     </div>
                 `;
             });
 
-            // Duplicate the payload block to create a seamless infinite scrolling cycle loop
-            container.innerHTML = htmlPayload + htmlPayload;
+            gridContainer.innerHTML = gridHTML;
         }
 
-        window.onload = initWidget;
+        window.onload = buildChoreChart;
     </script>
 </body>
 </html>
