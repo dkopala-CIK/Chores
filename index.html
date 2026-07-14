@@ -27,6 +27,18 @@
             overflow: hidden;
             width: 100vw;
             height: 100vh;
+            position: relative;
+        }
+
+        /* Overlay canvas for fireworks, confetti, and stars */
+        #fx-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
         }
 
         /* Header Layout Styling */
@@ -40,7 +52,6 @@
             height: 9vh;
         }
 
-        /* Main Header Font Size */
         .header h1 {
             font-size: 4.5vh; 
             font-weight: 900;
@@ -50,7 +61,6 @@
             text-shadow: 0 0 12px rgba(0, 255, 204, 0.6);
         }
 
-        /* Rotation Display Font Size */
         .header .day-display {
             font-size: 3.75vh;
             color: #ff007f; /* Vibrant Neon Pink */
@@ -68,7 +78,7 @@
             height: calc(100% - 13vh);
         }
 
-        /* Child Entry Cards - Enforce alignment and layout */
+        /* Child Entry Cards */
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -78,13 +88,12 @@
             display: flex;
             flex-direction: row; 
             align-items: center;
-            /* Closed the gap between the profile and the checklist */
             gap: 1.2vw; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             overflow: hidden;
+            position: relative;
         }
 
-        /* Dynamic width header container to pull tasks close to the profile */
         .card-header {
             display: flex;
             flex-direction: column;
@@ -92,10 +101,9 @@
             justify-content: center;
             text-align: center;
             flex-shrink: 0;
-            width: auto; /* Shrink to fit, letting details slide close */
+            width: auto;
         }
 
-        /* Prominent circular avatar */
         .avatar {
             width: 14vh; 
             height: 14vh;
@@ -107,7 +115,6 @@
             margin-bottom: 1vh;
         }
 
-        /* Child Name Font Size */
         .card h2 {
             font-size: 4vh;
             font-weight: 800;
@@ -119,7 +126,6 @@
             width: 100%;
         }
 
-        /* Max-Space Task Container */
         .task-list {
             flex-grow: 1;
             display: flex;
@@ -131,9 +137,10 @@
 
         .task-item {
             display: flex;
-            align-items: flex-start; /* Keeps the checkbox aligned to top of wrapped text */
+            align-items: flex-start;
             gap: 0.8vw;
             cursor: pointer;
+            position: relative;
         }
 
         /* Checkbox Styling */
@@ -150,13 +157,15 @@
             display: grid;
             place-content: center;
             flex-shrink: 0;
-            margin-top: 0.3vh; /* Balances larger checkboxes with wrapped text line-height */
+            margin-top: 0.3vh;
             transition: all 0.2s ease;
+            position: relative;
         }
 
         .task-item input[type="checkbox"]:checked {
             background-color: #00ffcc;
             border-color: #00ffcc;
+            animation: popCheck 0.3s ease-out;
         }
 
         .task-item input[type="checkbox"]:checked::before {
@@ -164,6 +173,16 @@
             color: #121212;
             font-size: 3.5vh;
             font-weight: bold;
+        }
+
+        /* Visual Ripple Effect Style */
+        .ripple-effect {
+            position: absolute;
+            border: 4px solid #00ffcc;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: rippleAnim 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            opacity: 1;
         }
 
         /* Task Label Font Size with full Wrapping Support */
@@ -174,18 +193,30 @@
             color: var(--text-main);
             cursor: pointer;
             user-select: none;
-            /* Replaced nowrap/ellipsis with normal wrapping rules */
             white-space: normal; 
             word-wrap: break-word;
             overflow-wrap: break-word;
             display: inline-block;
             width: 100%;
+            transition: color 0.3s ease;
         }
 
         .task-item input[type="checkbox"]:checked + label {
             color: var(--text-muted);
             text-decoration: line-through;
             opacity: 0.6;
+        }
+
+        /* Animations */
+        @keyframes popCheck {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes rippleAnim {
+            0% { width: 0; height: 0; opacity: 1; transform: translate(-50%, -50%); }
+            100% { width: 150px; height: 150px; opacity: 0; transform: translate(-50%, -50%); }
         }
 
         /* Sabbath Layout */
@@ -214,6 +245,8 @@
     </style>
 </head>
 <body>
+
+    <canvas id="fx-canvas"></canvas>
 
     <div class="header">
         <h1>Chore Chart</h1>
@@ -294,6 +327,115 @@
             }
         };
 
+        // --- Visual Effects Particle Engine ---
+        const canvas = document.getElementById('fx-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type; // 'confetti', 'firework', 'star'
+                this.size = type === 'star' ? Math.random() * 15 + 10 : Math.random() * 8 + 4;
+                this.speedX = (Math.random() - 0.5) * (type === 'firework' ? 12 : 6);
+                this.speedY = (Math.random() - 0.5) * (type === 'firework' ? 12 : 6) - (type === 'confetti' ? 4 : 1);
+                this.gravity = type === 'star' ? 0.05 : 0.15;
+                this.color = this.getRandomColor(type);
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.01;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = (Math.random() - 0.5) * 10;
+            }
+
+            getRandomColor(type) {
+                if (type === 'star') return '#ffd700'; // Gold
+                const colors = ['#00ffcc', '#ff007f', '#ff00ff', '#00ffff', '#ffff00', '#ff3300', '#33ff00'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.speedY += this.gravity;
+                this.alpha -= this.decay;
+                this.rotation += this.rotSpeed;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+
+                if (this.type === 'confetti') {
+                    ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                } else if (this.type === 'firework') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = this.color;
+                    ctx.fill();
+                } else if (this.type === 'star') {
+                    ctx.beginPath();
+                    for (let i = 0; i < 5; i++) {
+                        ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * this.size, -Math.sin((18 + i * 72) * Math.PI / 180) * this.size);
+                        ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * (this.size/2), -Math.sin((54 + i * 72) * Math.PI / 180) * (this.size/2));
+                    }
+                    ctx.closePath();
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = '#ffd700';
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        function triggerFx(e, targetBox) {
+            const rect = targetBox.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+
+            // Pick a random effect profile out of the 4 variations
+            const fxChoices = ['confetti', 'firework', 'star', 'ripple'];
+            const chosenFx = fxChoices[Math.floor(Math.random() * fxChoices.length)];
+
+            if (chosenFx === 'ripple') {
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple-effect';
+                ripple.style.left = `${x - rect.left + targetBox.offsetLeft}px`;
+                ripple.style.top = `${y - rect.top + targetBox.offsetTop}px`;
+                targetBox.parentElement.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            } else {
+                const particleCount = chosenFx === 'firework' ? 50 : 35;
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle(x, y, chosenFx));
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles = particles.filter(p => p.alpha > 0);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        requestAnimationFrame(animateParticles);
+
+
+        // Cache and App State System
         function manageStorageState(currentDay) {
             const storedDay = localStorage.getItem('activeChoreDay');
             if (storedDay !== String(currentDay)) {
@@ -313,9 +455,10 @@
                     box.checked = true;
                 }
 
-                box.addEventListener('change', () => {
+                box.addEventListener('change', (e) => {
                     if (box.checked) {
                         localStorage.setItem(box.id, 'checked');
+                        triggerFx(e, box); // Fire random special effect reward
                     } else {
                         localStorage.removeItem(box.id);
                     }
