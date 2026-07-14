@@ -29,7 +29,7 @@
             height: 100vh;
         }
 
-        /* Header Layout Styling - Increased height to accommodate larger fonts */
+        /* Header Layout Styling */
         .header {
             display: flex;
             justify-content: space-between;
@@ -40,7 +40,7 @@
             height: 9vh;
         }
 
-        /* Main Header Font Size increased by 1.5x (3vh -> 4.5vh) */
+        /* Main Header Font Size */
         .header h1 {
             font-size: 4.5vh; 
             font-weight: 900;
@@ -50,7 +50,7 @@
             text-shadow: 0 0 12px rgba(0, 255, 204, 0.6);
         }
 
-        /* Rotation Display Font Size increased by 1.5x (2.5vh -> 3.75vh) */
+        /* Rotation Display Font Size */
         .header .day-display {
             font-size: 3.75vh;
             color: #ff007f; /* Vibrant Neon Pink */
@@ -68,22 +68,23 @@
             height: calc(100% - 13vh);
         }
 
-        /* Child Entry Cards */
+        /* Child Entry Cards - Enforce alignment and layout */
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             backdrop-filter: blur(5px);
             border-radius: 1.5vw;
-            padding: 2.5vh 2vw;
+            padding: 2.5vh 2.5vw;
             display: flex;
             flex-direction: row; 
             align-items: center;
-            gap: 2.5vw;
+            /* Closed the gap between the profile and the checklist */
+            gap: 1.2vw; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             overflow: hidden;
         }
 
-        /* Self-contained header container to prevent oval squishing */
+        /* Dynamic width header container to pull tasks close to the profile */
         .card-header {
             display: flex;
             flex-direction: column;
@@ -91,10 +92,10 @@
             justify-content: center;
             text-align: center;
             flex-shrink: 0;
-            width: 28%;
+            width: auto; /* Shrink to fit, letting details slide close */
         }
 
-        /* Kept avatar prominent and perfectly circular */
+        /* Prominent circular avatar */
         .avatar {
             width: 14vh; 
             height: 14vh;
@@ -106,9 +107,9 @@
             margin-bottom: 1vh;
         }
 
-        /* Child Name Font Size doubled (2.4vh -> 4.8vh) scaled down slightly to 4.2vh to prevent layout breaking */
+        /* Child Name Font Size */
         .card h2 {
-            font-size: 4.2vh;
+            font-size: 4vh;
             font-weight: 800;
             letter-spacing: 0.5px;
             color: var(--text-main);
@@ -124,18 +125,18 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 1.2vh; 
+            gap: 1vh; 
             overflow: hidden; 
         }
 
         .task-item {
             display: flex;
-            align-items: center;
-            gap: 1vw;
+            align-items: flex-start; /* Keeps the checkbox aligned to top of wrapped text */
+            gap: 0.8vw;
             cursor: pointer;
         }
 
-        /* Checkbox Size doubled to match text size scaling */
+        /* Checkbox Styling */
         .task-item input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
@@ -149,6 +150,7 @@
             display: grid;
             place-content: center;
             flex-shrink: 0;
+            margin-top: 0.3vh; /* Balances larger checkboxes with wrapped text line-height */
             transition: all 0.2s ease;
         }
 
@@ -164,17 +166,18 @@
             font-weight: bold;
         }
 
-        /* Task Label Font Size doubled (2.6vh -> 5.2vh) optimized safely to 4.2vh to maximize space without overflowing card dimensions */
+        /* Task Label Font Size with full Wrapping Support */
         .task-item label {
-            font-size: 4.2vh; 
+            font-size: 4vh; 
             font-weight: 600;
-            line-height: 1.1;
+            line-height: 1.15;
             color: var(--text-main);
             cursor: pointer;
             user-select: none;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            /* Replaced nowrap/ellipsis with normal wrapping rules */
+            white-space: normal; 
+            word-wrap: break-word;
+            overflow-wrap: break-word;
             display: inline-block;
             width: 100%;
         }
