@@ -23,37 +23,38 @@
             font-family: "Montserrat", "Segoe UI", Roboto, sans-serif;
             background-color: transparent !important;
             color: var(--text-main);
-            padding: 1vh 1vw;
+            padding: 2vh 1.5vw;
             overflow: hidden;
             width: 100vw;
             height: 100vh;
         }
 
-        /* Header Layout Styling */
+        /* Header Layout Styling - Increased height to accommodate larger fonts */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5vh;
-            border-bottom: 2px solid var(--card-border);
-            padding-bottom: 0.5vh;
-            height: 5vh;
+            margin-bottom: 2vh;
+            border-bottom: 3px solid var(--card-border);
+            padding-bottom: 1vh;
+            height: 9vh;
         }
 
-        /* Eye-Catching Neon Header Color & Font */
+        /* Main Header Font Size increased by 1.5x (3vh -> 4.5vh) */
         .header h1 {
-            font-size: 3vh; 
+            font-size: 4.5vh; 
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.3vw;
             color: #00ffcc; 
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+            text-shadow: 0 0 12px rgba(0, 255, 204, 0.6);
         }
 
+        /* Rotation Display Font Size increased by 1.5x (2.5vh -> 3.75vh) */
         .header .day-display {
-            font-size: 2.5vh;
+            font-size: 3.75vh;
             color: #ff007f; /* Vibrant Neon Pink */
-            text-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+            text-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
             font-weight: 700;
             text-transform: uppercase;
         }
@@ -64,10 +65,10 @@
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(2, 1fr);
             grid-gap: 2.5vh 2vw;
-            height: calc(100% - 8vh);
+            height: calc(100% - 13vh);
         }
 
-        /* Child Entry Cards - Maximize horizontal flex layout space */
+        /* Child Entry Cards */
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -90,25 +91,31 @@
             justify-content: center;
             text-align: center;
             flex-shrink: 0;
+            width: 28%;
         }
 
-        /* Enforced perfect circle dimensioning */
+        /* Kept avatar prominent and perfectly circular */
         .avatar {
-            width: 13vh; 
-            height: 13vh;
+            width: 14vh; 
+            height: 14vh;
             border-radius: 50%;
             object-fit: cover;
-            aspect-ratio: 1 / 1; /* Guarantees a perfect circle */
+            aspect-ratio: 1 / 1; 
             border: 3px solid var(--card-border);
             background-color: rgba(255,255,255,0.05);
             margin-bottom: 1vh;
         }
 
+        /* Child Name Font Size doubled (2.4vh -> 4.8vh) scaled down slightly to 4.2vh to prevent layout breaking */
         .card h2 {
-            font-size: 2.4vh;
+            font-size: 4.2vh;
             font-weight: 800;
             letter-spacing: 0.5px;
             color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
 
         /* Max-Space Task Container */
@@ -117,7 +124,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 1.5vh; /* Clean vertical spacing between items */
+            gap: 1.2vh; 
             overflow: hidden; 
         }
 
@@ -128,12 +135,13 @@
             cursor: pointer;
         }
 
+        /* Checkbox Size doubled to match text size scaling */
         .task-item input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
-            width: 3.2vh; /* Significantly larger checkboxes */
-            height: 3.2vh;
-            border: 2px solid var(--text-muted);
+            width: 4.5vh; 
+            height: 4.5vh;
+            border: 3px solid var(--text-muted);
             border-radius: 8px;
             outline: none;
             background-color: transparent;
@@ -152,19 +160,21 @@
         .task-item input[type="checkbox"]:checked::before {
             content: "✓";
             color: #121212;
-            font-size: 2.2vh;
+            font-size: 3.5vh;
             font-weight: bold;
         }
 
-        /* Boosted text sizing tailored to fill the empty gaps beautifully */
+        /* Task Label Font Size doubled (2.6vh -> 5.2vh) optimized safely to 4.2vh to maximize space without overflowing card dimensions */
         .task-item label {
-            font-size: 2.6vh; /* Visually bold, clear font sizing */
+            font-size: 4.2vh; 
             font-weight: 600;
-            line-height: 1.2;
+            line-height: 1.1;
             color: var(--text-main);
             cursor: pointer;
             user-select: none;
-            word-break: break-word; /* Wraps clean if a task runs slightly long */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             display: inline-block;
             width: 100%;
         }
@@ -188,14 +198,14 @@
         }
 
         .rest-day h2 {
-            font-size: 6vh;
+            font-size: 8vh;
             color: #00ffcc;
             margin-bottom: 2vh;
             text-transform: uppercase;
         }
 
         .rest-day p {
-            font-size: 3vh;
+            font-size: 4.5vh;
             color: var(--text-muted);
         }
     </style>
