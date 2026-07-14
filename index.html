@@ -23,7 +23,7 @@
             font-family: "Montserrat", "Segoe UI", Roboto, sans-serif;
             background-color: transparent !important;
             color: var(--text-main);
-            padding: 2vh 2vw;
+            padding: 1vh 1vw;
             overflow: hidden;
             width: 100vw;
             height: 100vh;
@@ -34,15 +34,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2vh;
+            margin-bottom: 1.5vh;
             border-bottom: 2px solid var(--card-border);
-            padding-bottom: 1vh;
-            height: 6vh;
+            padding-bottom: 0.5vh;
+            height: 5vh;
         }
 
         /* Eye-Catching Neon Header Color & Font */
         .header h1 {
-            font-size: 3.5vh; 
+            font-size: 3vh; 
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.3vw;
@@ -51,7 +51,7 @@
         }
 
         .header .day-display {
-            font-size: 2.8vh;
+            font-size: 2.5vh;
             color: #ff007f; /* Vibrant Neon Pink */
             text-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
             font-weight: 700;
@@ -63,26 +63,26 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(2, 1fr);
-            grid-gap: 2vh 1.5vw;
-            height: calc(100% - 10vh);
+            grid-gap: 2.5vh 2vw;
+            height: calc(100% - 8vh);
         }
 
-        /* Child Entry Cards - Half Height and Increased Width Layout */
+        /* Child Entry Cards - Maximize horizontal flex layout space */
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             backdrop-filter: blur(5px);
-            border-radius: 1vw;
-            padding: 1.5vh 1.5vw;
+            border-radius: 1.5vw;
+            padding: 2.5vh 2vw;
             display: flex;
-            flex-direction: row; /* Horizontal split to optimize wider space */
+            flex-direction: row; 
             align-items: center;
-            gap: 1.5vw;
+            gap: 2.5vw;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             overflow: hidden;
         }
 
-        /* Left-aligned Header Layout within Card */
+        /* Self-contained header container to prevent oval squishing */
         .card-header {
             display: flex;
             flex-direction: column;
@@ -90,57 +90,51 @@
             justify-content: center;
             text-align: center;
             flex-shrink: 0;
-            width: 25%;
         }
 
-        /* Doubled Original Avatar Size (From 9.5vh to 19vh) adjusted smoothly */
+        /* Enforced perfect circle dimensioning */
         .avatar {
-            width: 19vh; 
-            height: 19vh;
-            max-width: 100%;
-            max-height: 12vh; /* Keeps it perfectly proportioned to the half-height card */
+            width: 13vh; 
+            height: 13vh;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--card-border);
+            aspect-ratio: 1 / 1; /* Guarantees a perfect circle */
+            border: 3px solid var(--card-border);
             background-color: rgba(255,255,255,0.05);
-            margin-bottom: 0.5vh;
+            margin-bottom: 1vh;
         }
 
         .card h2 {
-            font-size: 2.2vh;
-            font-weight: 700;
+            font-size: 2.4vh;
+            font-weight: 800;
             letter-spacing: 0.5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
+            color: var(--text-main);
         }
 
-        /* Max-Space Task Container without internal scrolling */
+        /* Max-Space Task Container */
         .task-list {
-            width: 75%;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 1vh;
-            overflow: hidden; /* No scrolling */
+            gap: 1.5vh; /* Clean vertical spacing between items */
+            overflow: hidden; 
         }
 
         .task-item {
             display: flex;
             align-items: center;
-            gap: 0.6vw;
+            gap: 1vw;
             cursor: pointer;
-            padding: 0.2vh 0;
         }
 
         .task-item input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
-            width: 2.4vh;
-            height: 2.4vh;
+            width: 3.2vh; /* Significantly larger checkboxes */
+            height: 3.2vh;
             border: 2px solid var(--text-muted);
-            border-radius: 6px;
+            border-radius: 8px;
             outline: none;
             background-color: transparent;
             cursor: pointer;
@@ -158,21 +152,19 @@
         .task-item input[type="checkbox"]:checked::before {
             content: "✓";
             color: #121212;
-            font-size: 1.6vh;
+            font-size: 2.2vh;
             font-weight: bold;
         }
 
-        /* Maximized text sizing tailored tightly to fit without scrolling */
+        /* Boosted text sizing tailored to fill the empty gaps beautifully */
         .task-item label {
-            font-size: 1.9vh; 
+            font-size: 2.6vh; /* Visually bold, clear font sizing */
             font-weight: 600;
             line-height: 1.2;
             color: var(--text-main);
             cursor: pointer;
             user-select: none;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            word-break: break-word; /* Wraps clean if a task runs slightly long */
             display: inline-block;
             width: 100%;
         }
@@ -289,7 +281,6 @@
             }
         };
 
-        // Storage & Cache management configuration 
         function manageStorageState(currentDay) {
             const storedDay = localStorage.getItem('activeChoreDay');
             if (storedDay !== String(currentDay)) {
