@@ -27,18 +27,6 @@
             overflow: hidden;
             width: 100vw;
             height: 100vh;
-            position: relative;
-        }
-
-        /* Overlay canvas for fireworks, confetti, and stars */
-        #fx-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 9999;
         }
 
         /* Header Layout Styling */
@@ -52,6 +40,7 @@
             height: 9vh;
         }
 
+        /* Main Header Font Size */
         .header h1 {
             font-size: 4.5vh; 
             font-weight: 900;
@@ -61,6 +50,7 @@
             text-shadow: 0 0 12px rgba(0, 255, 204, 0.6);
         }
 
+        /* Rotation Display Font Size */
         .header .day-display {
             font-size: 3.75vh;
             color: #ff007f; /* Vibrant Neon Pink */
@@ -84,14 +74,13 @@
             border: 1px solid var(--card-border);
             backdrop-filter: blur(5px);
             border-radius: 1.5vw;
-            padding: 2.5vh 2.5vw;
+            padding: 2vh 2vw;
             display: flex;
             flex-direction: row; 
             align-items: center;
             gap: 1.2vw; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             overflow: hidden;
-            position: relative;
         }
 
         .card-header {
@@ -105,18 +94,18 @@
         }
 
         .avatar {
-            width: 14vh; 
-            height: 14vh;
+            width: 13vh; 
+            height: 13vh;
             border-radius: 50%;
             object-fit: cover;
             aspect-ratio: 1 / 1; 
             border: 3px solid var(--card-border);
             background-color: rgba(255,255,255,0.05);
-            margin-bottom: 1vh;
+            margin-bottom: 0.8vh;
         }
 
         .card h2 {
-            font-size: 4vh;
+            font-size: 3.8vh;
             font-weight: 800;
             letter-spacing: 0.5px;
             color: var(--text-main);
@@ -126,12 +115,13 @@
             width: 100%;
         }
 
+        /* Task Container */
         .task-list {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 1vh; 
+            gap: 0.8vh; 
             overflow: hidden; 
         }
 
@@ -140,15 +130,14 @@
             align-items: flex-start;
             gap: 0.8vw;
             cursor: pointer;
-            position: relative;
         }
 
         /* Checkbox Styling */
         .task-item input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
-            width: 4.5vh; 
-            height: 4.5vh;
+            width: 3.8vh; 
+            height: 3.8vh;
             border: 3px solid var(--text-muted);
             border-radius: 8px;
             outline: none;
@@ -157,37 +146,25 @@
             display: grid;
             place-content: center;
             flex-shrink: 0;
-            margin-top: 0.3vh;
-            transition: all 0.2s ease;
-            position: relative;
+            margin-top: 0.2vh;
+            transition: all 0.1s linear;
         }
 
         .task-item input[type="checkbox"]:checked {
             background-color: #00ffcc;
             border-color: #00ffcc;
-            animation: popCheck 0.3s ease-out;
         }
 
         .task-item input[type="checkbox"]:checked::before {
             content: "✓";
             color: #121212;
-            font-size: 3.5vh;
+            font-size: 3vh;
             font-weight: bold;
-        }
-
-        /* Visual Ripple Effect Style */
-        .ripple-effect {
-            position: absolute;
-            border: 4px solid #00ffcc;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: rippleAnim 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-            opacity: 1;
         }
 
         /* Task Label Font Size with full Wrapping Support */
         .task-item label {
-            font-size: 4vh; 
+            font-size: 3.4vh; 
             font-weight: 600;
             line-height: 1.15;
             color: var(--text-main);
@@ -198,25 +175,12 @@
             overflow-wrap: break-word;
             display: inline-block;
             width: 100%;
-            transition: color 0.3s ease;
         }
 
         .task-item input[type="checkbox"]:checked + label {
             color: var(--text-muted);
             text-decoration: line-through;
             opacity: 0.6;
-        }
-
-        /* Animations */
-        @keyframes popCheck {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes rippleAnim {
-            0% { width: 0; height: 0; opacity: 1; transform: translate(-50%, -50%); }
-            100% { width: 150px; height: 150px; opacity: 0; transform: translate(-50%, -50%); }
         }
 
         /* Sabbath Layout */
@@ -246,8 +210,6 @@
 </head>
 <body>
 
-    <canvas id="fx-canvas"></canvas>
-
     <div class="header">
         <h1>Chore Chart</h1>
         <div class="day-display" id="date-display">Loading...</div>
@@ -262,180 +224,71 @@
             1: { // Monday
                 name: "Monday",
                 tasks: [
-                    { child: "Jay", img: "jay.jpg", chores: ["Zone A Vac (FR/Foyer/Steps)", "Post-Dinner Wipe", "Dishwasher Loader"] },
-                    { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Recycling Cans to Curb", "Daily Pool Skimmer"] },
-                    { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Zone B Vac (LR/DR/Kit)"] },
-                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Feed & Water Baci", "Pool Towel Roundup"] },
-                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick"] },
-                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Jay)"] }
+                    { child: "Jay", img: "jay.jpg", chores: ["Zone A Vac (FR/Foyer/Steps)", "Post-Dinner Wipe", "Dishwasher Loader", "Mom's Choice"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Recycling Cans to Curb", "Daily Pool Skimmer", "Mom's Choice"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Zone B Vac (LR/DR/Kit)", "Clean under gazebo/wipe table", "Mom's Choice"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Feed & Water Baci", "Pool Towel Roundup", "Mom's Choice"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick", "Mom's Choice"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Jay)", "Mom's Choice"] }
                 ]
             },
             2: { // Tuesday
                 name: "Tuesday",
                 tasks: [
-                    { child: "Jay", img: "jay.jpg", chores: ["Upstairs Bathroom (Light Clean)", "Make dinner"] },
-                    { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Bring Recycling Cans Back", "Post-Dinner Wipe"] },
-                    { child: "Nate", img: "nate.jpg", chores: ["LAUNDRY DAY", "Dishwasher Loader"] },
-                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Zone A Vac (FR/Foyer/Steps)", "Daily Pool Skimmer"] },
-                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Feed & Water Baci"] },
-                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Ellie)"] }
+                    { child: "Jay", img: "jay.jpg", chores: ["Upstairs Bathroom (Light Clean)", "Make dinner", "Clean under gazebo/wipe table", "Mom's Choice"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Bring Recycling Cans Back", "Post-Dinner Wipe", "Mom's Choice"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["LAUNDRY DAY", "Dishwasher Loader", "Mom's Choice"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Zone A Vac (FR/Foyer/Steps)", "Daily Pool Skimmer", "Mom's Choice"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Feed & Water Baci", "Mom's Choice"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Ellie)", "Mom's Choice"] }
                 ]
             },
             3: { // Wednesday
                 name: "Wednesday",
                 tasks: [
-                    { child: "Jay", img: "jay.jpg", chores: ["Zone B Vac (LR/DR/Kit)", "Dishwasher Loader"] },
-                    { child: "Jake", img: "jake.jpg", chores: ["LAUNDRY DAY", "Walk Baci", "Trash Cans to Curb (with Dad)"] },
-                    { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Backyard Poop Scoop"] },
-                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Feed & Water Baci", "Pool Towel Roundup", "Post-Dinner Wipe"] },
-                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick"] },
-                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Toy Reset Helper (with Gabe)"] }
+                    { child: "Jay", img: "jay.jpg", chores: ["Zone B Vac (LR/DR/Kit)", "Dishwasher Loader", "Clean under gazebo/wipe table", "Mom's Choice"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["LAUNDRY DAY", "Walk Baci", "Trash Cans to Curb (with Dad)", "Mom's Choice"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Backyard Poop Scoop", "Mom's Choice"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Feed & Water Baci", "Pool Towel Roundup", "Post-Dinner Wipe", "Mom's Choice"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick", "Mom's Choice"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Toy Reset Helper (with Gabe)", "Mom's Choice"] }
                 ]
             },
             4: { // Thursday
                 name: "Thursday",
                 tasks: [
-                    { child: "Jay", img: "jay.jpg", chores: ["LAUNDRY DAY", "Make dinner"] },
-                    { child: "Jake", img: "jake.jpg", chores: ["Zone A Vac (FR/Foyer/Steps)", "Walk Baci", "Bring Trash Cans Back", "Daily Pool Skimmer"] },
-                    { child: "Nate", img: "nate.jpg", chores: ["Clean Pool Vac Filters", "Post-Dinner Wipe", "Dishwasher Loader"] },
-                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Up Bathroom (Light Clean)"] },
-                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Feed & Water Baci"] },
-                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Ellie)"] }
+                    { child: "Jay", img: "jay.jpg", chores: ["LAUNDRY DAY", "Make dinner", "Clean under gazebo/wipe table", "Mom's Choice"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Zone A Vac (FR/Foyer/Steps)", "Walk Baci", "Bring Trash Cans Back", "Daily Pool Skimmer", "Mom's Choice"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Clean Pool Vac Filters", "Post-Dinner Wipe", "Dishwasher Loader", "Mom's Choice"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Up Bathroom (Light Clean)", "Mom's Choice"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Feed & Water Baci", "Mom's Choice"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Ellie)", "Mom's Choice"] }
                 ]
             },
             5: { // Friday
                 name: "Friday",
                 tasks: [
-                    { child: "Jay", img: "jay.jpg", chores: ["Pool Towel Roundup", "Daily Pool Skimmer", "Dishwasher Loader"] },
-                    { child: "Jake", img: "jake.jpg", chores: ["Zone B Vac (LR/DR/Kit)", "Walk Baci", "Backyard Poop Scoop"] },
-                    { child: "Nate", img: "nate.jpg", chores: ["Zone C Vac (Entire Basement)"] },
-                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "LAUNDRY DAY", "Feed & Water Baci", "Post-Dinner Wipe"] },
-                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick"] },
-                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Jake)"] }
+                    { child: "Jay", img: "jay.jpg", chores: ["Pool Towel Roundup", "Daily Pool Skimmer", "Dishwasher Loader", "Mom's Choice"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Zone B Vac (LR/DR/Kit)", "Walk Baci", "Backyard Poop Scoop", "Mom's Choice"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Zone C Vac (Entire Basement)", "Clean under gazebo/wipe table", "Mom's Choice"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "LAUNDRY DAY", "Feed & Water Baci", "Post-Dinner Wipe", "Mom's Choice"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick", "Mom's Choice"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Jake)", "Mom's Choice"] }
                 ]
             },
             6: { // Saturday
                 name: "Saturday",
                 tasks: [
-                    { child: "Jay", img: "jay.jpg", chores: ["Upstairs Bathroom (Deep Clean)", "Clean bedroom", "Towel Folder (Fold & Away)"] },
-                    { child: "Jake", img: "jake.jpg", chores: ["1/2 Bath (Full Clean)", "Walk Baci", "Kitchen Mop & Floor Scrub"] },
-                    { child: "Nate", img: "nate.jpg", chores: ["Clean Pool Vac Filters", "Daily Pool Skimmer", "Post-Dinner Wipe", "Dishwasher Loader"] },
-                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset"] },
-                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Total House Toy Roundup", "Feed & Water Baci"] },
-                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Consolidation Bin"] }
+                    { child: "Jay", img: "jay.jpg", chores: ["Upstairs Bathroom (Deep Clean)", "Clean bedroom", "Towel Folder (Fold & Away)", "Mom's Choice"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["1/2 Bath (Full Clean)", "Walk Baci", "Kitchen Mop & Floor Scrub", "Mom's Choice"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Clean Pool Vac Filters", "Daily Pool Skimmer", "Post-Dinner Wipe", "Dishwasher Loader", "Mom's Choice"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Clean under gazebo/wipe table", "Mom's Choice"] },
+                    { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Total House Toy Roundup", "Feed & Water Baci", "Mom's Choice"] },
+                    { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Consolidation Bin", "Mom's Choice"] }
                 ]
             }
         };
 
-        // --- Visual Effects Particle Engine ---
-        const canvas = document.getElementById('fx-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor(x, y, type) {
-                this.x = x;
-                this.y = y;
-                this.type = type; // 'confetti', 'firework', 'star'
-                this.size = type === 'star' ? Math.random() * 15 + 10 : Math.random() * 8 + 4;
-                this.speedX = (Math.random() - 0.5) * (type === 'firework' ? 12 : 6);
-                this.speedY = (Math.random() - 0.5) * (type === 'firework' ? 12 : 6) - (type === 'confetti' ? 4 : 1);
-                this.gravity = type === 'star' ? 0.05 : 0.15;
-                this.color = this.getRandomColor(type);
-                this.alpha = 1;
-                this.decay = Math.random() * 0.015 + 0.01;
-                this.rotation = Math.random() * 360;
-                this.rotSpeed = (Math.random() - 0.5) * 10;
-            }
-
-            getRandomColor(type) {
-                if (type === 'star') return '#ffd700'; // Gold
-                const colors = ['#00ffcc', '#ff007f', '#ff00ff', '#00ffff', '#ffff00', '#ff3300', '#33ff00'];
-                return colors[Math.floor(Math.random() * colors.length)];
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.speedY += this.gravity;
-                this.alpha -= this.decay;
-                this.rotation += this.rotSpeed;
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.rotation * Math.PI / 180);
-                ctx.fillStyle = this.color;
-
-                if (this.type === 'confetti') {
-                    ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
-                } else if (this.type === 'firework') {
-                    ctx.beginPath();
-                    ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
-                    ctx.shadowBlur = 10;
-                    ctx.shadowColor = this.color;
-                    ctx.fill();
-                } else if (this.type === 'star') {
-                    ctx.beginPath();
-                    for (let i = 0; i < 5; i++) {
-                        ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * this.size, -Math.sin((18 + i * 72) * Math.PI / 180) * this.size);
-                        ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * (this.size/2), -Math.sin((54 + i * 72) * Math.PI / 180) * (this.size/2));
-                    }
-                    ctx.closePath();
-                    ctx.shadowBlur = 8;
-                    ctx.shadowColor = '#ffd700';
-                    ctx.fill();
-                }
-                ctx.restore();
-            }
-        }
-
-        function triggerFx(e, targetBox) {
-            const rect = targetBox.getBoundingClientRect();
-            const x = rect.left + rect.width / 2;
-            const y = rect.top + rect.height / 2;
-
-            // Pick a random effect profile out of the 4 variations
-            const fxChoices = ['confetti', 'firework', 'star', 'ripple'];
-            const chosenFx = fxChoices[Math.floor(Math.random() * fxChoices.length)];
-
-            if (chosenFx === 'ripple') {
-                const ripple = document.createElement('div');
-                ripple.className = 'ripple-effect';
-                ripple.style.left = `${x - rect.left + targetBox.offsetLeft}px`;
-                ripple.style.top = `${y - rect.top + targetBox.offsetTop}px`;
-                targetBox.parentElement.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 600);
-            } else {
-                const particleCount = chosenFx === 'firework' ? 50 : 35;
-                for (let i = 0; i < particleCount; i++) {
-                    particles.push(new Particle(x, y, chosenFx));
-                }
-            }
-        }
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles = particles.filter(p => p.alpha > 0);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            requestAnimationFrame(animateParticles);
-        }
-        requestAnimationFrame(animateParticles);
-
-
-        // Cache and App State System
         function manageStorageState(currentDay) {
             const storedDay = localStorage.getItem('activeChoreDay');
             if (storedDay !== String(currentDay)) {
@@ -455,10 +308,9 @@
                     box.checked = true;
                 }
 
-                box.addEventListener('change', (e) => {
+                box.addEventListener('change', () => {
                     if (box.checked) {
                         localStorage.setItem(box.id, 'checked');
-                        triggerFx(e, box); // Fire random special effect reward
                     } else {
                         localStorage.removeItem(box.id);
                     }
