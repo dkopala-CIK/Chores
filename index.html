@@ -12,6 +12,7 @@
             --text-muted: #b0b0b0;
             --accent-color: #00ffcc;
             --accent-pink: #ff007f;
+            --danger-color: #ff4d4d;
         }
 
         * {
@@ -119,6 +120,7 @@
             justify-content: center;
             gap: 0.8vh; 
             overflow: hidden; 
+            width: 100%;
         }
 
         .task-item {
@@ -126,7 +128,8 @@
             align-items: flex-start;
             gap: 0.8vw;
             cursor: pointer;
-            touch-action: manipulation; /* Speeds up touch response */
+            touch-action: manipulation; 
+            width: 100%;
         }
 
         .task-item input[type="checkbox"] {
@@ -169,13 +172,36 @@
             word-wrap: break-word;
             overflow-wrap: break-word;
             display: inline-block;
-            width: 100%;
+            flex-grow: 1; /* Pushes the delete button to the far right */
+            width: auto;
         }
 
         .task-item input[type="checkbox"]:checked + label {
             color: var(--text-muted);
             text-decoration: line-through;
             opacity: 0.6;
+        }
+
+        /* Delete Button for Custom Chores */
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: var(--danger-color);
+            font-size: 4.5vh;
+            font-weight: bold;
+            line-height: 0.8;
+            cursor: pointer;
+            padding: 0 0.5vw;
+            margin-top: 0.2vh;
+            touch-action: manipulation;
+            opacity: 0.6;
+            transition: opacity 0.1s, transform 0.1s;
+            flex-shrink: 0;
+        }
+
+        .delete-btn:active {
+            opacity: 1;
+            transform: scale(0.85);
         }
 
         .add-task-btn {
@@ -192,7 +218,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             margin-top: 0.4vh;
-            touch-action: manipulation; /* Eliminates 300ms tap delay */
+            touch-action: manipulation; 
         }
 
         .add-task-btn:hover {
@@ -281,16 +307,16 @@
             border-radius: 8px;
             cursor: pointer;
             user-select: none;
-            transition: background 0.05s, transform 0.05s; /* Snappier animation */
+            transition: background 0.05s, transform 0.05s; 
             min-width: 4.5vw;
-            touch-action: manipulation; /* **CRITICAL FIX**: Removes 300ms delay */
+            touch-action: manipulation; 
         }
 
         .key:active {
             background: var(--accent-color);
             color: #121212;
             border-color: var(--accent-color);
-            transform: scale(0.95); /* Gives instant physical feedback */
+            transform: scale(0.95); 
         }
 
         .key.wide {
@@ -471,8 +497,8 @@
             ]}
         };
 
-        // --- OPTIMIZED VIRTUAL KEYBOARD LOGIC ---
-        let cachedInputField = null; // Caching avoids re-searching the DOM every keystroke
+        // --- VIRTUAL KEYBOARD LOGIC ---
+        let cachedInputField = null; 
 
         function typeKey(key) {
             if (!cachedInputField) {
@@ -557,6 +583,19 @@
             localStorage.setItem(`custom-${todayKey}-${childName}`, JSON.stringify(chores));
         }
 
+        function deleteCustomChore(childName, choreIndex) {
+            const todayKey = getTodayKey();
+            const chores = getCustomChores(childName);
+            
+            // Remove the unique ID checkbox state from storage before deleting the chore
+            const checkboxID = `chk-${childName}-custom-${choreIndex}`;
+            localStorage.removeItem(checkboxID);
+
+            chores.splice(choreIndex, 1);
+            localStorage.setItem(`custom-${todayKey}-${childName}`, JSON.stringify(chores));
+            buildChoreChart(); // instantly refreshes DOM
+        }
+
         function bindCheckboxListeners() {
             const checkboxes = document.querySelectorAll('.task-item input[type="checkbox"]');
             checkboxes.forEach(box => {
@@ -602,14 +641,30 @@
                 let checklistHTML = '';
                 
                 const customChores = getCustomChores(group.child);
-                const allChores = [...group.chores, ...customChores];
+                
+                // Map permanent chores so we know they aren't custom
+                const mappedBaseChores = group.chores.map((c, i) => ({ text: c, isCustom: false, idx: i }));
+                // Map custom chores so we can track their index for the delete function
+                const mappedCustomChores = customChores.map((c, i) => ({ text: c, isCustom: true, idx: i }));
+                
+                const allChores = [...mappedBaseChores, ...mappedCustomChores];
 
-                allChores.forEach((chore, choreIdx) => {
-                    const uniqueID = `chk-${groupIdx}-${choreIdx}`;
+                allChores.forEach((choreObj) => {
+                    // Create specific IDs so deleting custom tasks doesn't misalign base task checkboxes
+                    const uniqueID = choreObj.isCustom 
+                        ? `chk-${group.child.replace(/\s+/g, '')}-custom-${choreObj.idx}` 
+                        : `chk-${groupIdx}-base-${choreObj.idx}`;
+                    
+                    let deleteBtnHTML = '';
+                    if (choreObj.isCustom) {
+                        deleteBtnHTML = `<button class="delete-btn" onclick="deleteCustomChore('${group.child}', ${choreObj.idx}); event.stopPropagation();">×</button>`;
+                    }
+
                     checklistHTML += `
                         <div class="task-item" onclick="document.getElementById('${uniqueID}').click(); event.stopPropagation();">
                             <input type="checkbox" id="${uniqueID}" onclick="event.stopPropagation();">
-                            <label for="${uniqueID}">${chore}</label>
+                            <label for="${uniqueID}">${choreObj.text}</label>
+                            ${deleteBtnHTML}
                         </div>
                     `;
                 });
