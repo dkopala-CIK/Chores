@@ -6,11 +6,11 @@
     <title>DAKboard Wide Large-Font Chore Chart</title>
     <style>
         :root {
-            --card-bg: rgba(30, 30, 30, 0.75); /* Semi-transparent to blend with wallpaper */
+            --card-bg: rgba(30, 30, 30, 0.75);
             --card-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff;
             --text-muted: #b0b0b0;
-            --accent-color: #00ffcc; /* Vivid neon cyan */
+            --accent-color: #00ffcc;
             --accent-pink: #ff007f;
         }
 
@@ -41,7 +41,6 @@
             height: 9vh;
         }
 
-        /* Main Header Font Size */
         .header h1 {
             font-size: 4.5vh; 
             font-weight: 900;
@@ -51,16 +50,14 @@
             text-shadow: 0 0 12px rgba(0, 255, 204, 0.6);
         }
 
-        /* Rotation Display Font Size */
         .header .day-display {
             font-size: 3.75vh;
-            color: var(--accent-pink); /* Vibrant Neon Pink */
+            color: var(--accent-pink); 
             text-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
             font-weight: 700;
             text-transform: uppercase;
         }
 
-        /* 2-Row, 3-Column Grid Configuration */
         .chore-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -69,7 +66,6 @@
             height: calc(100% - 13vh);
         }
 
-        /* Child Entry Cards */
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -116,7 +112,6 @@
             width: 100%;
         }
 
-        /* Task Container */
         .task-list {
             flex-grow: 1;
             display: flex;
@@ -133,7 +128,6 @@
             cursor: pointer;
         }
 
-        /* Checkbox Styling */
         .task-item input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
@@ -163,7 +157,6 @@
             font-weight: bold;
         }
 
-        /* Task Label Font Size with full Wrapping Support */
         .task-item label {
             font-size: 3.4vh; 
             font-weight: 600;
@@ -184,7 +177,6 @@
             opacity: 0.6;
         }
 
-        /* Add Chore Button Styling */
         .add-task-btn {
             display: flex;
             align-items: center;
@@ -214,7 +206,84 @@
             color: var(--accent-color);
         }
 
-        /* Sabbath Layout */
+        /* --------------------------- */
+        /* CUSTOM DAKBOARD MODAL CSS   */
+        /* --------------------------- */
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--accent-color);
+            border-radius: 1.5vw;
+            padding: 4vh 3vw;
+            width: 50vw;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.4);
+        }
+
+        .modal-content h3 {
+            font-size: 4.5vh;
+            color: var(--accent-color);
+            margin-bottom: 2vh;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 2vh;
+            font-size: 3.5vh;
+            border-radius: 8px;
+            border: 2px solid var(--card-border);
+            background: rgba(255,255,255,0.05);
+            color: var(--text-main);
+            margin-bottom: 4vh;
+            outline: none;
+        }
+
+        .modal-content input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 2vw;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 2vh;
+            font-size: 3.5vh;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 2px solid var(--text-muted) !important;
+            color: var(--text-muted);
+        }
+
+        .btn-save {
+            background: var(--accent-color);
+            color: #121212;
+        }
+
         .rest-day {
             grid-column: span 3;
             grid-row: span 2;
@@ -248,6 +317,18 @@
 
     <div class="chore-grid" id="chore-grid">
         <!-- Rendered dynamically by script -->
+    </div>
+
+    <!-- NATIVE CUSTOM MODAL FOR DAKBOARD -->
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title">Add Chore</h3>
+            <input type="text" id="modal-input" placeholder="Enter chore description..." autocomplete="off">
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-save" onclick="submitModal()">Save</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -320,6 +401,32 @@
             }
         };
 
+        // --- CUSTOM MODAL LOGIC ---
+        let activeChildForModal = "";
+
+        function openModal(childName) {
+            activeChildForModal = childName;
+            document.getElementById('modal-title').innerText = `Add Chore for ${childName}`;
+            document.getElementById('modal-input').value = "";
+            document.getElementById('custom-modal').style.display = 'flex';
+            document.getElementById('modal-input').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').style.display = 'none';
+            activeChildForModal = "";
+        }
+
+        function submitModal() {
+            const choreName = document.getElementById('modal-input').value;
+            if (choreName && choreName.trim() !== '') {
+                saveCustomChore(activeChildForModal, choreName.trim());
+                buildChoreChart(); // Refresh UI
+            }
+            closeModal();
+        }
+
+        // --- STORAGE & CHART RENDERING ---
         function getTodayKey() {
             const today = new Date();
             return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
@@ -329,7 +436,6 @@
             const todayKey = getTodayKey();
             const storedDateKey = localStorage.getItem('activeChoreDateKey');
 
-            // If date changes (e.g. at midnight), clear checked states and old custom chores
             if (storedDateKey !== todayKey) {
                 for (let key in localStorage) {
                     if (key.startsWith('chk-') || key.startsWith('custom-')) {
@@ -351,14 +457,6 @@
             const chores = getCustomChores(childName);
             chores.push(choreText);
             localStorage.setItem(`custom-${todayKey}-${childName}`, JSON.stringify(chores));
-        }
-
-        function promptAddChore(childName) {
-            const choreName = prompt(`Add a temporary chore for ${childName}:`);
-            if (choreName && choreName.trim() !== '') {
-                saveCustomChore(childName, choreName.trim());
-                buildChoreChart(); // Re-render to show new chore immediately
-            }
         }
 
         function bindCheckboxListeners() {
@@ -405,7 +503,6 @@
             currentDayData.tasks.forEach((group, groupIdx) => {
                 let checklistHTML = '';
                 
-                // Combining standard spreadsheet chores with dynamic today's custom chores
                 const customChores = getCustomChores(group.child);
                 const allChores = [...group.chores, ...customChores];
 
@@ -419,9 +516,9 @@
                     `;
                 });
 
-                // Add Chore Button appended at the bottom of the child's card
+                // Uses openModal() instead of prompt()
                 const addBtnHTML = `
-                    <button class="add-task-btn" onclick="promptAddChore('${group.child}')">
+                    <button class="add-task-btn" onclick="openModal('${group.child}')">
                         <span class="add-icon">+</span> Add Chore
                     </button>
                 `;
@@ -444,26 +541,32 @@
             bindCheckboxListeners();
         }
 
-        // Auto-refresh chart at midnight to reset custom chores and routine automatically
         function scheduleMidnightRefresh() {
             const now = new Date();
             const night = new Date(
                 now.getFullYear(),
                 now.getMonth(),
-                now.getDate() + 1, // 12:00:00 AM next day
+                now.getDate() + 1, 
                 0, 0, 0
             );
             const msToMidnight = night.getTime() - now.getTime();
 
             setTimeout(() => {
                 buildChoreChart();
-                scheduleMidnightRefresh(); // Schedule next day's midnight reset
+                scheduleMidnightRefresh(); 
             }, msToMidnight);
         }
 
         window.onload = () => {
             buildChoreChart();
             scheduleMidnightRefresh();
+
+            // Allow submitting the modal by pressing the "Enter" key
+            document.getElementById('modal-input').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    submitModal();
+                }
+            });
         };
     </script>
 </body>
