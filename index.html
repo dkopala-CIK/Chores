@@ -11,6 +11,7 @@
             --text-main: #ffffff;
             --text-muted: #b0b0b0;
             --accent-color: #00ffcc; /* Vivid neon cyan */
+            --accent-pink: #ff007f;
         }
 
         * {
@@ -46,14 +47,14 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.3vw;
-            color: #00ffcc; 
+            color: var(--accent-color); 
             text-shadow: 0 0 12px rgba(0, 255, 204, 0.6);
         }
 
         /* Rotation Display Font Size */
         .header .day-display {
             font-size: 3.75vh;
-            color: #ff007f; /* Vibrant Neon Pink */
+            color: var(--accent-pink); /* Vibrant Neon Pink */
             text-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
             font-weight: 700;
             text-transform: uppercase;
@@ -151,8 +152,8 @@
         }
 
         .task-item input[type="checkbox"]:checked {
-            background-color: #00ffcc;
-            border-color: #00ffcc;
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
         }
 
         .task-item input[type="checkbox"]:checked::before {
@@ -183,6 +184,36 @@
             opacity: 0.6;
         }
 
+        /* Add Chore Button Styling */
+        .add-task-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.8vw;
+            background: transparent;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.4vh 0.6vw;
+            color: var(--text-muted);
+            font-size: 2.8vh;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 0.4vh;
+        }
+
+        .add-task-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        .add-icon {
+            font-size: 3.2vh;
+            font-weight: bold;
+            line-height: 1;
+            color: var(--accent-color);
+        }
+
         /* Sabbath Layout */
         .rest-day {
             grid-column: span 3;
@@ -197,7 +228,7 @@
 
         .rest-day h2 {
             font-size: 8vh;
-            color: #00ffcc;
+            color: var(--accent-color);
             margin-bottom: 2vh;
             text-transform: uppercase;
         }
@@ -224,9 +255,9 @@
             1: { // Monday
                 name: "Monday",
                 tasks: [
-                    { child: "Jay", img: "jay.jpg", chores: ["Zone A Vac (FR/Foyer/Steps)", "Post-Dinner Wipe", "Dishwasher Loader", "Mom's Choice"] },
+                    { child: "Jay", img: "jay.jpg", chores: ["Vacuum: Family Room, Foyer, Steps", "Post-Dinner Wipe", "Dishwasher Loader", "Mom's Choice"] },
                     { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Recycling Cans to Curb", "Daily Pool Skimmer", "Mom's Choice"] },
-                    { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Zone B Vac (LR/DR/Kit)", "Clean under gazebo/wipe table", "Mom's Choice"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Vacuum: Laundry Room, Dining Room, Kitchen", "Clean under gazebo/wipe table", "Mom's Choice"] },
                     { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Feed & Water Baci", "Pool Towel Roundup", "Mom's Choice"] },
                     { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick", "Mom's Choice"] },
                     { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Jay)", "Mom's Choice"] }
@@ -236,9 +267,9 @@
                 name: "Tuesday",
                 tasks: [
                     { child: "Jay", img: "jay.jpg", chores: ["Upstairs Bathroom (Light Clean)", "Make dinner", "Clean under gazebo/wipe table", "Mom's Choice"] },
-                    { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Bring Recycling Cans Back", "Post-Dinner Wipe", "Mom's Choice"] },
-                    { child: "Nate", img: "nate.jpg", chores: ["LAUNDRY DAY", "Dishwasher Loader", "Mom's Choice"] },
-                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Zone A Vac (FR/Foyer/Steps)", "Daily Pool Skimmer", "Mom's Choice"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Bring Recycling Cans Back", "Vacuum: Basement Steps", "Post-Dinner Wipe", "Mom's Choice"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["LAUNDRY DAY", "Dishwasher Loader", "Daily Pool Skimmer", "Mom's Choice"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Vacuum: Basement", "Mom's Choice"] },
                     { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Feed & Water Baci", "Mom's Choice"] },
                     { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Ellie)", "Mom's Choice"] }
                 ]
@@ -246,9 +277,9 @@
             3: { // Wednesday
                 name: "Wednesday",
                 tasks: [
-                    { child: "Jay", img: "jay.jpg", chores: ["Zone B Vac (LR/DR/Kit)", "Dishwasher Loader", "Clean under gazebo/wipe table", "Mom's Choice"] },
+                    { child: "Jay", img: "jay.jpg", chores: ["Vacuum: Laundry Room, Dining Room, Kitchen", "Dishwasher Loader", "Clean under gazebo/wipe table", "Mom's Choice"] },
                     { child: "Jake", img: "jake.jpg", chores: ["LAUNDRY DAY", "Walk Baci", "Trash Cans to Curb (with Dad)", "Mom's Choice"] },
-                    { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Backyard Poop Scoop", "Mom's Choice"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Backyard Poop Scoop", "Daily Pool Skimmer", "Mom's Choice"] },
                     { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Feed & Water Baci", "Pool Towel Roundup", "Post-Dinner Wipe", "Mom's Choice"] },
                     { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick", "Mom's Choice"] },
                     { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Toy Reset Helper (with Gabe)", "Mom's Choice"] }
@@ -258,9 +289,9 @@
                 name: "Thursday",
                 tasks: [
                     { child: "Jay", img: "jay.jpg", chores: ["LAUNDRY DAY", "Make dinner", "Clean under gazebo/wipe table", "Mom's Choice"] },
-                    { child: "Jake", img: "jake.jpg", chores: ["Zone A Vac (FR/Foyer/Steps)", "Walk Baci", "Bring Trash Cans Back", "Daily Pool Skimmer", "Mom's Choice"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Vacuum: Family Room, Foyer, Steps", "Walk Baci", "Bring Trash Cans Back", "Daily Pool Skimmer", "Mom's Choice"] },
                     { child: "Nate", img: "nate.jpg", chores: ["Clean Pool Vac Filters", "Post-Dinner Wipe", "Dishwasher Loader", "Mom's Choice"] },
-                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Up Bathroom (Light Clean)", "Mom's Choice"] },
+                    { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Upstairs Bathroom (Light Clean)", "Mom's Choice"] },
                     { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Feed & Water Baci", "Mom's Choice"] },
                     { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Ellie)", "Mom's Choice"] }
                 ]
@@ -269,8 +300,8 @@
                 name: "Friday",
                 tasks: [
                     { child: "Jay", img: "jay.jpg", chores: ["Pool Towel Roundup", "Daily Pool Skimmer", "Dishwasher Loader", "Mom's Choice"] },
-                    { child: "Jake", img: "jake.jpg", chores: ["Zone B Vac (LR/DR/Kit)", "Walk Baci", "Backyard Poop Scoop", "Mom's Choice"] },
-                    { child: "Nate", img: "nate.jpg", chores: ["Zone C Vac (Entire Basement)", "Clean under gazebo/wipe table", "Mom's Choice"] },
+                    { child: "Jake", img: "jake.jpg", chores: ["Vacuum: Laundry Room, Dining Room, Kitchen", "Walk Baci", "Backyard Poop Scoop", "Mom's Choice"] },
+                    { child: "Nate", img: "nate.jpg", chores: ["Vacuum: Basement + Steps", "Clean under gazebo/wipe table", "Mom's Choice"] },
                     { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "LAUNDRY DAY", "Feed & Water Baci", "Post-Dinner Wipe", "Mom's Choice"] },
                     { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick", "Mom's Choice"] },
                     { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Jake)", "Mom's Choice"] }
@@ -289,15 +320,44 @@
             }
         };
 
+        function getTodayKey() {
+            const today = new Date();
+            return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+        }
+
         function manageStorageState(currentDay) {
-            const storedDay = localStorage.getItem('activeChoreDay');
-            if (storedDay !== String(currentDay)) {
+            const todayKey = getTodayKey();
+            const storedDateKey = localStorage.getItem('activeChoreDateKey');
+
+            // If date changes (e.g. at midnight), clear checked states and old custom chores
+            if (storedDateKey !== todayKey) {
                 for (let key in localStorage) {
-                    if (key.startsWith('chk-')) {
+                    if (key.startsWith('chk-') || key.startsWith('custom-')) {
                         localStorage.removeItem(key);
                     }
                 }
-                localStorage.setItem('activeChoreDay', currentDay);
+                localStorage.setItem('activeChoreDateKey', todayKey);
+            }
+        }
+
+        function getCustomChores(childName) {
+            const todayKey = getTodayKey();
+            const stored = localStorage.getItem(`custom-${todayKey}-${childName}`);
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function saveCustomChore(childName, choreText) {
+            const todayKey = getTodayKey();
+            const chores = getCustomChores(childName);
+            chores.push(choreText);
+            localStorage.setItem(`custom-${todayKey}-${childName}`, JSON.stringify(chores));
+        }
+
+        function promptAddChore(childName) {
+            const choreName = prompt(`Add a temporary chore for ${childName}:`);
+            if (choreName && choreName.trim() !== '') {
+                saveCustomChore(childName, choreName.trim());
+                buildChoreChart(); // Re-render to show new chore immediately
             }
         }
 
@@ -344,7 +404,12 @@
             let gridHTML = '';
             currentDayData.tasks.forEach((group, groupIdx) => {
                 let checklistHTML = '';
-                group.chores.forEach((chore, choreIdx) => {
+                
+                // Combining standard spreadsheet chores with dynamic today's custom chores
+                const customChores = getCustomChores(group.child);
+                const allChores = [...group.chores, ...customChores];
+
+                allChores.forEach((chore, choreIdx) => {
                     const uniqueID = `chk-${groupIdx}-${choreIdx}`;
                     checklistHTML += `
                         <div class="task-item" onclick="document.getElementById('${uniqueID}').click(); event.stopPropagation();">
@@ -354,6 +419,13 @@
                     `;
                 });
 
+                // Add Chore Button appended at the bottom of the child's card
+                const addBtnHTML = `
+                    <button class="add-task-btn" onclick="promptAddChore('${group.child}')">
+                        <span class="add-icon">+</span> Add Chore
+                    </button>
+                `;
+
                 gridHTML += `
                     <div class="card">
                         <div class="card-header">
@@ -362,6 +434,7 @@
                         </div>
                         <div class="task-list">
                             ${checklistHTML}
+                            ${addBtnHTML}
                         </div>
                     </div>
                 `;
@@ -371,7 +444,27 @@
             bindCheckboxListeners();
         }
 
-        window.onload = buildChoreChart;
+        // Auto-refresh chart at midnight to reset custom chores and routine automatically
+        function scheduleMidnightRefresh() {
+            const now = new Date();
+            const night = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() + 1, // 12:00:00 AM next day
+                0, 0, 0
+            );
+            const msToMidnight = night.getTime() - now.getTime();
+
+            setTimeout(() => {
+                buildChoreChart();
+                scheduleMidnightRefresh(); // Schedule next day's midnight reset
+            }, msToMidnight);
+        }
+
+        window.onload = () => {
+            buildChoreChart();
+            scheduleMidnightRefresh();
+        };
     </script>
 </body>
 </html>
