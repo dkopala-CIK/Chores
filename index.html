@@ -126,6 +126,7 @@
             align-items: flex-start;
             gap: 0.8vw;
             cursor: pointer;
+            touch-action: manipulation; /* Speeds up touch response */
         }
 
         .task-item input[type="checkbox"] {
@@ -191,6 +192,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             margin-top: 0.4vh;
+            touch-action: manipulation; /* Eliminates 300ms tap delay */
         }
 
         .add-task-btn:hover {
@@ -228,7 +230,7 @@
             border: 2px solid var(--accent-color);
             border-radius: 1.5vw;
             padding: 3vh 3vw;
-            width: 75vw; /* Widened to fit keyboard */
+            width: 75vw; 
             max-width: 1000px;
             text-align: center;
             box-shadow: 0 0 30px rgba(0, 255, 204, 0.4);
@@ -240,7 +242,6 @@
             margin-bottom: 2vh;
         }
 
-        /* Readonly prevents the missing native keyboard from trying to pop up */
         .modal-content input {
             width: 100%;
             padding: 1.5vh 2vw;
@@ -280,14 +281,16 @@
             border-radius: 8px;
             cursor: pointer;
             user-select: none;
-            transition: background 0.1s;
+            transition: background 0.05s, transform 0.05s; /* Snappier animation */
             min-width: 4.5vw;
+            touch-action: manipulation; /* **CRITICAL FIX**: Removes 300ms delay */
         }
 
         .key:active {
             background: var(--accent-color);
             color: #121212;
             border-color: var(--accent-color);
+            transform: scale(0.95); /* Gives instant physical feedback */
         }
 
         .key.wide {
@@ -314,6 +317,7 @@
             cursor: pointer;
             border: none;
             transition: all 0.2s ease;
+            touch-action: manipulation;
         }
 
         .btn-cancel {
@@ -366,7 +370,6 @@
     <div id="custom-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modal-title">Add Chore</h3>
-            <!-- input is readonly to prevent default touch-keyboard behavior -->
             <input type="text" id="modal-input" placeholder="Tap keys below..." readonly>
             
             <div class="keyboard">
@@ -419,68 +422,72 @@
     <script>
         const choreDatabase = {
             1: { name: "Monday", tasks: [
-                { child: "Jay", img: "jay.jpg", chores: ["Vacuum: Family Room, Foyer, Steps", "Post-Dinner Wipe", "Dishwasher Loader", "Mom's Choice"] },
-                { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Recycling Cans to Curb", "Daily Pool Skimmer", "Mom's Choice"] },
-                { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Vacuum: Laundry Room, Dining Room, Kitchen", "Clean under gazebo/wipe table", "Mom's Choice"] },
-                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Feed & Water Baci", "Pool Towel Roundup", "Mom's Choice"] },
-                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick", "Mom's Choice"] },
-                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Jay)", "Mom's Choice"] }
+                { child: "Jay", img: "jay.jpg", chores: ["Vacuum: Family Room, Foyer, Steps", "Post-Dinner Wipe", "Dishwasher Loader"] },
+                { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Recycling Cans to Curb", "Daily Pool Skimmer"] },
+                { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Vacuum: Laundry Room, Dining Room, Kitchen", "Clean under gazebo/wipe table"] },
+                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Feed & Water Baci", "Pool Towel Roundup"] },
+                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick"] },
+                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Jay)"] }
             ]},
             2: { name: "Tuesday", tasks: [
-                { child: "Jay", img: "jay.jpg", chores: ["Upstairs Bathroom (Light Clean)", "Make dinner", "Clean under gazebo/wipe table", "Mom's Choice"] },
-                { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Bring Recycling Cans Back", "Vacuum: Basement Steps", "Post-Dinner Wipe", "Mom's Choice"] },
-                { child: "Nate", img: "nate.jpg", chores: ["LAUNDRY DAY", "Dishwasher Loader", "Daily Pool Skimmer", "Mom's Choice"] },
-                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Vacuum: Basement", "Mom's Choice"] },
-                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Feed & Water Baci", "Mom's Choice"] },
-                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Ellie)", "Mom's Choice"] }
+                { child: "Jay", img: "jay.jpg", chores: ["Upstairs Bathroom (Light Clean)", "Make dinner", "Clean under gazebo/wipe table"] },
+                { child: "Jake", img: "jake.jpg", chores: ["Walk Baci", "Bring Recycling Cans Back", "Vacuum: Basement Steps", "Post-Dinner Wipe"] },
+                { child: "Nate", img: "nate.jpg", chores: ["LAUNDRY DAY", "Dishwasher Loader", "Daily Pool Skimmer"] },
+                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Vacuum: Basement"] },
+                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Feed & Water Baci"] },
+                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Ellie)"] }
             ]},
             3: { name: "Wednesday", tasks: [
-                { child: "Jay", img: "jay.jpg", chores: ["Vacuum: Laundry Room, Dining Room, Kitchen", "Dishwasher Loader", "Clean under gazebo/wipe table", "Mom's Choice"] },
-                { child: "Jake", img: "jake.jpg", chores: ["LAUNDRY DAY", "Walk Baci", "Trash Cans to Curb (with Dad)", "Mom's Choice"] },
-                { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Backyard Poop Scoop", "Daily Pool Skimmer", "Mom's Choice"] },
-                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Feed & Water Baci", "Pool Towel Roundup", "Post-Dinner Wipe", "Mom's Choice"] },
-                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick", "Mom's Choice"] },
-                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Toy Reset Helper (with Gabe)", "Mom's Choice"] }
+                { child: "Jay", img: "jay.jpg", chores: ["Vacuum: Laundry Room, Dining Room, Kitchen", "Dishwasher Loader", "Clean under gazebo/wipe table"] },
+                { child: "Jake", img: "jake.jpg", chores: ["LAUNDRY DAY", "Walk Baci", "Trash Cans to Curb (with Dad)"] },
+                { child: "Nate", img: "nate.jpg", chores: ["Daily Kitchen Trash/Rec", "Backyard Poop Scoop", "Daily Pool Skimmer"] },
+                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Feed & Water Baci", "Pool Towel Roundup", "Post-Dinner Wipe"] },
+                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick"] },
+                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Toy Reset Helper (with Gabe)"] }
             ]},
             4: { name: "Thursday", tasks: [
-                { child: "Jay", img: "jay.jpg", chores: ["LAUNDRY DAY", "Make dinner", "Clean under gazebo/wipe table", "Mom's Choice"] },
-                { child: "Jake", img: "jake.jpg", chores: ["Vacuum: Family Room, Foyer, Steps", "Walk Baci", "Bring Trash Cans Back", "Daily Pool Skimmer", "Mom's Choice"] },
-                { child: "Nate", img: "nate.jpg", chores: ["Clean Pool Vac Filters", "Post-Dinner Wipe", "Dishwasher Loader", "Mom's Choice"] },
-                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Upstairs Bathroom (Light Clean)", "Mom's Choice"] },
-                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Feed & Water Baci", "Mom's Choice"] },
-                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Ellie)", "Mom's Choice"] }
+                { child: "Jay", img: "jay.jpg", chores: ["LAUNDRY DAY", "Make dinner", "Clean under gazebo/wipe table"] },
+                { child: "Jake", img: "jake.jpg", chores: ["Vacuum: Family Room, Foyer, Steps", "Walk Baci", "Bring Trash Cans Back", "Daily Pool Skimmer"] },
+                { child: "Nate", img: "nate.jpg", chores: ["Clean Pool Vac Filters", "Post-Dinner Wipe", "Dishwasher Loader"] },
+                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Upstairs Bathroom (Light Clean)"] },
+                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Feed & Water Baci"] },
+                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Bookshelf Straighten (with Ellie)"] }
             ]},
             5: { name: "Friday", tasks: [
-                { child: "Jay", img: "jay.jpg", chores: ["Pool Towel Roundup", "Daily Pool Skimmer", "Dishwasher Loader", "Mom's Choice"] },
-                { child: "Jake", img: "jake.jpg", chores: ["Vacuum: Laundry Room, Dining Room, Kitchen", "Walk Baci", "Backyard Poop Scoop", "Mom's Choice"] },
-                { child: "Nate", img: "nate.jpg", chores: ["Vacuum: Basement + Steps", "Clean under gazebo/wipe table", "Mom's Choice"] },
-                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "LAUNDRY DAY", "Feed & Water Baci", "Post-Dinner Wipe", "Mom's Choice"] },
-                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick", "Mom's Choice"] },
-                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Jake)", "Mom's Choice"] }
+                { child: "Jay", img: "jay.jpg", chores: ["Pool Towel Roundup", "Daily Pool Skimmer", "Dishwasher Loader"] },
+                { child: "Jake", img: "jake.jpg", chores: ["Vacuum: Laundry Room, Dining Room, Kitchen", "Walk Baci", "Backyard Poop Scoop"] },
+                { child: "Nate", img: "nate.jpg", chores: ["Vacuum: Basement + Steps", "Clean under gazebo/wipe table"] },
+                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "LAUNDRY DAY", "Feed & Water Baci", "Post-Dinner Wipe"] },
+                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Family Room & Foyer Pick"] },
+                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Matcher (with Jake)"] }
             ]},
             6: { name: "Saturday", tasks: [
-                { child: "Jay", img: "jay.jpg", chores: ["Upstairs Bathroom (Deep Clean)", "Clean bedroom", "Towel Folder (Fold & Away)", "Mom's Choice"] },
-                { child: "Jake", img: "jake.jpg", chores: ["1/2 Bath (Full Clean)", "Walk Baci", "Kitchen Mop & Floor Scrub", "Mom's Choice"] },
-                { child: "Nate", img: "nate.jpg", chores: ["Clean Pool Vac Filters", "Daily Pool Skimmer", "Post-Dinner Wipe", "Dishwasher Loader", "Mom's Choice"] },
-                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Clean under gazebo/wipe table", "Mom's Choice"] },
-                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Total House Toy Roundup", "Feed & Water Baci", "Mom's Choice"] },
-                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Consolidation Bin", "Mom's Choice"] }
+                { child: "Jay", img: "jay.jpg", chores: ["Upstairs Bathroom (Deep Clean)", "Clean bedroom", "Towel Folder (Fold & Away)"] },
+                { child: "Jake", img: "jake.jpg", chores: ["1/2 Bath (Full Clean)", "Walk Baci", "Kitchen Mop & Floor Scrub"] },
+                { child: "Nate", img: "nate.jpg", chores: ["Clean Pool Vac Filters", "Daily Pool Skimmer", "Post-Dinner Wipe", "Dishwasher Loader"] },
+                { child: "Ellie", img: "ellie.jpg", chores: ["Unload Dishwasher", "Basement Toy Reset", "Clean under gazebo/wipe table"] },
+                { child: "Gabe", img: "gabe.jpg", chores: ["Unload Dishwasher", "Total House Toy Roundup", "Feed & Water Baci"] },
+                { child: "Vera & Ben", img: "vera_ben.jpg", chores: ["Shoe Consolidation Bin"] }
             ]}
         };
 
-        // --- VIRTUAL KEYBOARD LOGIC ---
+        // --- OPTIMIZED VIRTUAL KEYBOARD LOGIC ---
+        let cachedInputField = null; // Caching avoids re-searching the DOM every keystroke
+
         function typeKey(key) {
-            const inputField = document.getElementById('modal-input');
-            let currentText = inputField.value;
+            if (!cachedInputField) {
+                cachedInputField = document.getElementById('modal-input');
+            }
+            
+            let currentText = cachedInputField.value;
 
             if (key === 'BACKSPACE') {
-                inputField.value = currentText.slice(0, -1);
+                cachedInputField.value = currentText.slice(0, -1);
             } else if (key === 'CLEAR') {
-                inputField.value = '';
+                cachedInputField.value = '';
             } else {
-                // To prevent starting with a space or getting overly long
                 if (currentText.length === 0 && key === ' ') return;
-                inputField.value = currentText + key;
+                cachedInputField.value = currentText + key;
             }
         }
 
@@ -490,7 +497,11 @@
         function openModal(childName) {
             activeChildForModal = childName;
             document.getElementById('modal-title').innerText = `Add Chore for ${childName}`;
-            document.getElementById('modal-input').value = "";
+            
+            if (!cachedInputField) {
+                cachedInputField = document.getElementById('modal-input');
+            }
+            cachedInputField.value = "";
             document.getElementById('custom-modal').style.display = 'flex';
         }
 
@@ -500,8 +511,11 @@
         }
 
         function submitModal() {
-            const choreName = document.getElementById('modal-input').value;
-            // Basic formatting to capitalize first letter and make the rest lowercase for neatness
+            if (!cachedInputField) {
+                cachedInputField = document.getElementById('modal-input');
+            }
+            const choreName = cachedInputField.value;
+            
             if (choreName && choreName.trim() !== '') {
                 const formattedChore = choreName.charAt(0).toUpperCase() + choreName.slice(1).toLowerCase();
                 saveCustomChore(activeChildForModal, formattedChore.trim());
